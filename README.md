@@ -1,15 +1,16 @@
 # jangow
- Jangow WriteUp
+VulnHub Jangow WriteUp<br>
+https://www.vulnhub.com/entry/jangow-101,754/
 
 Adicione o endereço IP do alvo no arquivo hosts para que seu SO resolva o nome "jangow"
 
+<h2>⇒ Scanning </h2>
 
-⇒ Scanning
 Escaneando as portas do alvo:
 
 ```nmap -sC -sV -vv -oA quick jangow -oN nmap-all.txt```
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 # Nmap 7.92 scan initiated Tue Nov  2 12:06:03 2021 as: nmap -sC -sV -vv -oA quick -oN nmap-all.txt jangow
 Nmap scan report for jangow (192.168.122.127)
 Host is up, received arp-response (0.00066s latency).
@@ -22,10 +23,10 @@ PORT   STATE SERVICE REASON         VERSION
 |_http-title: 403 Forbidden
 MAC Address: 52:54:00:36:85:5E (QEMU virtual NIC)
 Service Info: Host: 127.0.0.1; OS: Unix
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 
 
-⇒ Enumeração
+<h2>⇒ Enumeração </h2>
  web 80:
 
 ```dirb http://jangow:80 /usr/share/dirb/wordlists/big.txt | tee dirb80.txt```
@@ -114,6 +115,7 @@ http://jangow [200 OK] Apache[2.4.18], Country[RESERVED][ZZ], HTTPServer[Ubuntu 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  FTP 21:
+
 ```nmap -p 21 -A -sV -sC jangow```
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -156,7 +158,7 @@ MAC Address: 52:54:00:36:85:5E (QEMU virtual NIC)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-⇒ (Exploração/Ataque)  
+<h2>⇒ (Exploração/Ataque) </h2> 
 
 ![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/url_expl.png)
 
@@ -304,7 +306,7 @@ http://jangow/site/busque.php?buscar=bash remote
 
 
 
-⇒ Escalação Privilégio 
+<h2>⇒ Escalação Privilégio </h2> 
 
 Upgrade de shell e entrar como usuário jangow01:
 python3 -c 'import pty; pty.spawn("/bin/sh")'
@@ -327,13 +329,6 @@ Basta agora copiar o exploit no alvo, compilar como o gcc e executar.
 
 
 
-
+~~~
 root@jangow01:~# cat /root/proof.txt
-
-
-
-
-
-
-⇒ (Pós-Exploração)  
-
+~~~
