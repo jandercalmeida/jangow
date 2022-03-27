@@ -334,7 +334,7 @@ http://jangow/site/busque.php?buscar=bash remote
 
 
 
-<h2>⇒ Escalação Privilégio </h2> 
+<h2>⇒ Escalação de Privilégio </h2> 
 
 Upgrade de shell e entrar como usuário jangow01:
 ~~~
@@ -348,7 +348,7 @@ Procurando por files com suid habilitado:
 ![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/output_find_suid.png)
 
 
-Executando o scanner de vulnerabilidades linpeas, encontrei o seguinte:
+Executando o scanner de vulnerabilidades linpeas (https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS), encontrei o seguinte:
 ![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/output_linpeas.png)
 
 
@@ -358,7 +358,9 @@ Download do exploit:
 searchsploit -m 40871 
 ~~~
 
-Basta agora copiar o exploit no alvo, compilar com o gcc e executar.
+Basta agora copiar o exploit no alvo, compilar com o gcc e executar.<br>
+Então, após executar o exploit:
+
 ![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/output_priv_esc.png)
 
 
