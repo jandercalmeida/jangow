@@ -1,8 +1,9 @@
 # jangow
-VulnHub Jangow WriteUp<br>
+<h1>VulnHub Jangow WriteUp</h1><br>
 https://www.vulnhub.com/entry/jangow-101,754/
 
-Adicione o endereço IP do alvo no arquivo hosts para que seu SO resolva o nome "jangow"
+Usei o nome jangow para resolver o IP do alvo. <br>
+Para isso, adicione o endereço IP do alvo no arquivo hosts para que seu SO resolva o nome "jangow"
 
 
 
