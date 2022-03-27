@@ -354,7 +354,7 @@ Executando o scanner de vulnerabilidades linpeas (https://github.com/carlospolop
 
 
 Download do exploit:
-~~~
+~~~bash
 searchsploit -m 40871 
 ~~~
 
