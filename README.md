@@ -6,6 +6,7 @@ Adicione o endereço IP do alvo no arquivo hosts para que seu SO resolva o nome 
 
 ⇒ Scanning
 Escaneando as portas do alvo:
+
 ```nmap -sC -sV -vv -oA quick jangow -oN nmap-all.txt```
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -26,6 +27,7 @@ Service Info: Host: 127.0.0.1; OS: Unix
 
 ⇒ Enumeração
  web 80:
+
 ```dirb http://jangow:80 /usr/share/dirb/wordlists/big.txt | tee dirb80.txt```
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -156,6 +158,7 @@ MAC Address: 52:54:00:36:85:5E (QEMU virtual NIC)
 
 ⇒ (Exploração/Ataque)  
 
+![alt text](https://github.com/jandercalmeida/jangow/blob/main/images/url_expl.png)
 
 Flag User:
 
